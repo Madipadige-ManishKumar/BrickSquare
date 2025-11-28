@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Madipadige-ManishKumar/Real-estate-MERN-project#readme",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
     "experss": "^0.0.1-security",
     "express": "^5.1.0",
