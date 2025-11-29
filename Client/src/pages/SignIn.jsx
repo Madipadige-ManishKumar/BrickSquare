@@ -19,6 +19,7 @@ const SignIn = () => {
   const handleSubmit = async (e)=>{
     e.preventDefault();
     dispatch(signInStart())
+    console.log("in sign")
     const res = await fetch('/api/auth/signin',{
       method:"POST",
       headers:{
@@ -33,7 +34,7 @@ const SignIn = () => {
       dispatch(signInFailure(data.message));
       return;
     }
-    dispatch(signInSuccess(data.user));
+    dispatch(signInSuccess(data));
     navigate('/');
   }
   catch(err){
