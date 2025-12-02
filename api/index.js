@@ -17,9 +17,9 @@ const app = express();
 
 // middleware 
 app.use(express.json());
+app.use(cookieParser());
 app.use('/api/users',userRouter);
 app.use('/api/auth',authRouter);
-app.use(cookieParser());
 
     // error handling middleware
 app.use((err,req,res,next)=>{

@@ -1,4 +1,6 @@
+import User from "../models/User.model.js";
 import { errorHandler } from "../utilis/error.js";
+import bcrypt from 'bcryptjs';
 
 export const test = (req,res)=>{
     res.send("User route testing successful");
@@ -9,12 +11,11 @@ export const updateUser = async (req,res,next)=>{
     if(req.params.id !== req.user.id){
         next(errorHandler(403,"You can update only your own account"));
     }
-    console.log("check the user id matched");
     try{
         if(req.body.password){
             req.body.password  = bcrypt.hashSync(req.body.password,10);
         }
-
+        
         const updatedUser = await User.findByIdAndUpdate(req.params.id,{
             $set:{
                 username:req.body.username,
@@ -23,6 +24,7 @@ export const updateUser = async (req,res,next)=>{
                 avatar:req.body.avatar,
             }
         },{new:true})
+        console.log("inside try after updatation ");
 
 
         const {password,...others} = updatedUser._doc;
