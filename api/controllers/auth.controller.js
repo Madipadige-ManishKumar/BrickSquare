@@ -6,7 +6,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 export const signup = async (req,res,next)=>{
     const {username,email,password} = req.body;
-    console.log(username,password);
     const hashedPassword = bcrypt.hashSync(password,10);
     const newUser = new User({username,email,password:hashedPassword});
     try{
@@ -32,8 +31,7 @@ export const signin = async (req,res,next)=>{
         else
             return error user not found
 
-    */
-   console.log(email,password);
+    */   
    try{
         const validUser = await User.findOne({email});
         if(!validUser){
@@ -50,4 +48,42 @@ export const signin = async (req,res,next)=>{
    catch(err){
     next(err);
    }
+}
+
+
+export const google = async (req,res,next)=>{
+    try{
+        const {name,email,photoURL} = req.body;
+        const user = await User.findOne({email});
+        if(user)
+        {
+            const token = jwt.sign({id:user._id},process.env.JWT_SECRET)
+            const{password,...rest}= user._doc;
+            res.cookie("access_token",token).status(200).json(rest);
+        }
+        else
+        {
+            const  password  = Math.random().toString(36).slice(-8);
+            const hashedPassword = bcrypt.hashSync(password,10);
+
+            const newUser  = new User({
+                username:name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4),
+                email,
+                password:hashedPassword,
+                avatar:photoURL,
+            })
+
+            await newUser.save();
+
+            const token = jwt.sign({id:newUser._id},process.env.JWT_SECRET)
+            const{ password:pass ,...rest} = newUser._doc;
+            res.cookie('access_token',token).status(200).json(rest);
+        }
+    }
+
+    catch(err)
+    {
+        next(err);
+    }
+
 }
