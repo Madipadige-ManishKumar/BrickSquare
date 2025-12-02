@@ -4,6 +4,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 import userRouter from './routes/User.router.js';
 import authRouter from './routes/auth.router.js';
+
+import cookieParser from 'cookie-parser';
+
 mongoose.connect(process.env.MONGO_DB_URL).then(()=>{
     console.log("Connected to MongoDB");
 }).catch((err)=>{
@@ -16,6 +19,7 @@ const app = express();
 app.use(express.json());
 app.use('/api/users',userRouter);
 app.use('/api/auth',authRouter);
+app.use(cookieParser());
 
     // error handling middleware
 app.use((err,req,res,next)=>{

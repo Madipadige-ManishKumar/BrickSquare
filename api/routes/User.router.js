@@ -1,12 +1,11 @@
 import express from 'express';
-import { test } from '../controllers/user.controller.js';
+import { test, updateUser } from '../controllers/user.controller.js';
+import { verifyToken } from '../utilis/verifyuser.js';
 
 const router = express.Router();
 
 router.get('/test',test)
 
-router.get('/api',(req,res)=>{
-    res.send("API is working fine");
-})
+router.post('/update/:id',verifyToken,updateUser)
 
 export default router;

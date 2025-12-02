@@ -23,6 +23,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.0",
     "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.3",
     "experss": "^0.0.1-security",
     "express": "^5.1.0",
