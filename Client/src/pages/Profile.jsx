@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
-import { deleteUserStart, deleteUserSuccess, deleteUserFailure } from '../redux/user/userSlice.js';
+import { deleteUserStart, deleteUserSuccess, deleteUserFailure, SignOutStart, SignOutSuccess, SignOutFailure} from '../redux/user/userSlice.js';
 const Profile = () => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user)
@@ -31,6 +31,23 @@ const Profile = () => {
     }
     catch(err){
       dispatch(deleteUserFailure(err.message));
+    }
+  }
+
+  const handleSignout = async ()=>{
+    try{
+      dispatch(SignOutStart()); 
+      const res = await fetch('/api/auth/signout')
+      const data = await res.json();
+      if(data.success == false){
+        dispatch(SignOutFailure(data.message));
+      }
+      dispatch(SignOutStart(data));
+      navigate('/sign-in');
+
+    }
+    catch(err){
+      dispatch(SignOutFailure(err.message)); 
     }
   }
   const handlesubmit = async (e)=>{
@@ -64,7 +81,7 @@ const Profile = () => {
       </form>
       <div className='flex justify-between mt-5'>
         <span onClick={handleDelete} className='text-red-600'>delete account</span>
-        <span className='text-blue-600'>sign out</span>
+        <span  onClick={handleSignout} className='text-blue-600'>sign out</span>
 
       </div>
       
