@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import userRouter from './routes/User.router.js';
 import authRouter from './routes/auth.router.js';
-
+import listingRouter from './routes/listing.router.js';
 import cookieParser from 'cookie-parser';
 
 mongoose.connect(process.env.MONGO_DB_URL).then(()=>{
@@ -20,6 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/api/users',userRouter);
 app.use('/api/auth',authRouter);
+app.use('/api/listings',listingRouter);
 
     // error handling middleware
 app.use((err,req,res,next)=>{
