@@ -20,7 +20,7 @@ const SignIn = () => {
   const handleSubmit = async (e)=>{
     e.preventDefault();
     dispatch(signInStart())
-    console.log("in sign")
+    
     const res = await fetch('/api/auth/signin',{
       method:"POST",
       headers:{
