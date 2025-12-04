@@ -52,6 +52,7 @@ export const signin = async (req,res,next)=>{
 
 
 export const google = async (req,res,next)=>{
+    console.log(process.env.JWT_SECRET+"hello world");
     try{
         const {name,email,photoURL} = req.body;
         const user = await User.findOne({email});

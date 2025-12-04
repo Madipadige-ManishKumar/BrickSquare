@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom';
-import { deleteUserStart, deleteUserSuccess, deleteUserFailure, SignOutStart, SignOutSuccess, SignOutFailure} from '../redux/user/userSlice.js';
+import { deleteUserStart, deleteUserSuccess, deleteUserFailure, SignOutStart, SignOutSuccess, SignOutFailure, updateUserStart, updateUserSuccess, updateUserFailure} from '../redux/user/userSlice.js';
 import { useEffect } from 'react';
 import Listing from '../components/Listing.jsx';
 const Profile = () => {
@@ -57,7 +57,7 @@ const Profile = () => {
       if(data.success == false){
         dispatch(SignOutFailure(data.message));
       }
-      dispatch(SignOutStart(data));
+      dispatch(SignOutSuccess(data));
       navigate('/sign-in');
 
     }
@@ -66,20 +66,26 @@ const Profile = () => {
     }
   }
   const handlesubmit = async (e)=>{
-    
-    e.preventDefault();
-    const res  = await fetch(`/api/users/update/${currentUser._id}`,{
-      method:"POST",
-      headers:{
-        'Content-Type':'application/json',
-      },
-      credentials: "include",
-      body:JSON.stringify(formData),
+    try{
+      e.preventDefault();
+      dispatch(updateUserStart());
+      const res  = await fetch(`/api/users/update/${currentUser._id}`,{
+        method:"POST",
+        headers:{
+          'Content-Type':'application/json',
+        },
+        credentials: "include",
+        body:JSON.stringify(formData),
+      }
+      )
+      const data = await res.json();
+      dispatch(updateUserSuccess(data));
+      console.log("Updated user:", data);
+      navigate('/profile');
     }
-    )
-    const data = await res.json();
-    console.log(data);
-    alert("Profile updated successfully");
+    catch(err){
+      dispatch(updateUserFailure(err.message));
+    }
 
   }
   return (
