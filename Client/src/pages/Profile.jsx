@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { deleteUserStart, deleteUserSuccess, deleteUserFailure, SignOutStart, SignOutSuccess, SignOutFailure} from '../redux/user/userSlice.js';
 const Profile = () => {
   const dispatch = useDispatch();
@@ -78,7 +78,9 @@ const Profile = () => {
       <input type="email" onChange={handleChange}  id="email" defaultValue={currentUser.email}  className="w-full p-2 border border-gray-300 rounded mb-4" />
       <input type="text" onChange={handleChange} id="password" className="w-full p-2 border border-gray-300 rounded mb-4"  />
       <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">Update Profile</button>
+      <Link to={'/create-listing'} className="w-full block text-center bg-green-500 text-white p-2 rounded mt-4">Create Listing</Link>
       </form>
+     
       <div className='flex justify-between mt-5'>
         <span onClick={handleDelete} className='text-red-600'>delete account</span>
         <span  onClick={handleSignout} className='text-blue-600'>sign out</span>
