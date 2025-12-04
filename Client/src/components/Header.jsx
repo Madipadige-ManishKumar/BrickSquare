@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <header className='bg-slate-200 shadow-md'>
 
-        <div className='flex justify-between items-center max-w-6xl  mx-auto'>
+        <div className='flex justify-between items-center max-w-6xl  mx-auto h-15'>
         <Link to='/' >
         <h1 className='text-sm font-bold sm:text-xl flex  flex-wrap'>
             <span className='text-slate-500'>
@@ -19,10 +19,7 @@ const Header = () => {
             </span>
         </h1>
         </Link>
-        <form action="" className='rounded-lg p-3 bg-slate-100 flex item-center'>
-            <input type="text" placeholder='Search..' className='focus:outline-none w-24 sm:w-64' />
-            <FaSearch className='text-slate-500 m-2'/>
-        </form>
+        
         <ul className='flex gap-6 text-sm font-medium items-center'>
             <Link to='/'>
                 <li className='hidden sm:inline text-slate-700 hover:underline'>Home</li>

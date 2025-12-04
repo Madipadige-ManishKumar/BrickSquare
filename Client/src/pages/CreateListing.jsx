@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const CreateListing = () => {
   const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
   console.log("Current User in CreateListing:", currentUser._id);
   const [formData, setFormData] = useState({
     name: "",
@@ -43,6 +45,10 @@ const CreateListing = () => {
     {
         rest.type = "sale";
     }
+    else if(sale && rent)
+    {
+        rest.type ="rent and sale"
+    }
     const res = await fetch('/api/listings/create',{
         method:"POST",
         headers:{
@@ -52,8 +58,8 @@ const CreateListing = () => {
         body:JSON.stringify(rest),
     });
     const data = await res.json();
-    console.log(data);
-    alert("Listing created successfully");
+    navigate('/profile');
+    
   };
 
   return (

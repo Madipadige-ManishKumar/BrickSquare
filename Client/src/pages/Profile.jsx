@@ -2,11 +2,26 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom';
 import { deleteUserStart, deleteUserSuccess, deleteUserFailure, SignOutStart, SignOutSuccess, SignOutFailure} from '../redux/user/userSlice.js';
+import { useEffect } from 'react';
+import Listing from '../components/Listing.jsx';
 const Profile = () => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user)
   const [formData,setFormData] = useState({});
+  const [listings,setListings] = useState([]);
   const navigate  = useNavigate()
+  useEffect(()=>{
+    const fetchListings = async () => {
+      try {
+        const res = await fetch('/api/listings/show/'+currentUser._id);
+        const data = await res.json();
+        setListings(data);
+      } catch (error) {
+        console.error("Error fetching listings:", error);
+      }
+    };
+    fetchListings();
+  },[])
   const handleChange = (e) =>{
     setFormData(
       {
@@ -69,7 +84,6 @@ const Profile = () => {
   }
   return (
     <>
-      {console.log(currentUser)}
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
       <form onSubmit={handlesubmit}>
         
@@ -85,6 +99,10 @@ const Profile = () => {
         <span onClick={handleDelete} className='text-red-600'>delete account</span>
         <span  onClick={handleSignout} className='text-blue-600'>sign out</span>
 
+      </div>
+      <div>
+        <div className='font-semibold items-center'>Listings</div>
+        {listings.length > 0 ? ( <Listing data={listings}/> ) : <div>No listings found</div>}
       </div>
       
     </>

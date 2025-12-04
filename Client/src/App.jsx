@@ -8,6 +8,7 @@ import About from './pages/About'
 import Header from './components/Header'
 import PrivateRoute from './components/PrivateRoute'
 import CreateListing from './pages/CreateListing'
+import EachList from './pages/EachList'
 
 
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
         </Route>
         <Route path="/about" element={<About/>} />
         <Route path="/create-listing" element={<CreateListing/>} />
+        <Route path="/edit-listing/:id" element={<EachList/>} /> 
       </Routes>
   </BrowserRouter>
     </>
