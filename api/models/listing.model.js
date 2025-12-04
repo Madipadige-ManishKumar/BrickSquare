@@ -13,20 +13,20 @@ const listingSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    regularprice:{
-        type:Number,
+    regularPrice:{
+        type:String,
         required:true,
     },
-    discountedprice:{
-        type:Number,
+    discountedPrice:{
+        type:String,
         required:true,
     },
     bathrooms:{
-        type:Number,
+        type:String,
         required:true,
     },
     bedrooms:{
-        type:Number,
+        type:String,
         required:true,
     },
     furnished:{
@@ -45,10 +45,11 @@ const listingSchema = new mongoose.Schema({
         type:Boolean,
         required:true,
     },
-    imagesUrls:{
-        type:Array,
-        required:true,
-    },
+    //   for adding images later
+    // imagesUrls:{
+    //     type:Array,
+    //     required:true,
+    // },
     userRef:{
         type:String,
         required:true,

@@ -1,22 +1,78 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 const CreateListing = () => {
+  const { currentUser } = useSelector((state) => state.user);
+  console.log("Current User in CreateListing:", currentUser._id);
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    address: "",
+    sale: false,
+    rent: false,
+    type: "",
+    parking: false,
+    furnished: false,
+    offer: false,
+    bedrooms: 1,
+    bathrooms: 1,
+    regularPrice: 0,
+    discountedPrice: 0,
+    userRef: currentUser ? currentUser._id : "",
+  });
+
+  // General input handler
+  const handleChange = (e) => {
+    const { id, value, type, checked } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [id]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  // Submit handler
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const {sale,rent,...rest} = formData;
+    if(rent)
+    {
+        rest.type = "rent";
+    }
+    else if(sale)
+    {
+        rest.type = "sale";
+    }
+    const res = await fetch('/api/listings/create',{
+        method:"POST",
+        headers:{
+            'Content-Type':'application/json',
+        },
+        credentials: "include",
+        body:JSON.stringify(rest),
+    });
+    const data = await res.json();
+    console.log(data);
+    alert("Listing created successfully");
+  };
+
   return (
-    <main className="max-w-5xl mx-auto p-4">
+    <main className="max-w-4xl mx-auto p-4">
       <h1 className="text-3xl font-semibold text-center my-7">
         Create Listing
       </h1>
 
-      {/* FORM */}
-      <form className="flex flex-col sm:flex-row gap-10 mb-10">
-        {/* LEFT SECTION */}
-        <div className="flex flex-col gap-6 flex-1">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-10 mb-10">
+        {/* LEFT SECTION ONLY */}
+        <div className="flex flex-col gap-6">
           {/* Name */}
           <input
             type="text"
             placeholder="Name"
             className="border p-3 rounded-lg"
             id="name"
+            value={formData.name}
+            onChange={handleChange}
             maxLength="62"
             minLength="10"
             required
@@ -27,6 +83,8 @@ const CreateListing = () => {
             placeholder="Description"
             className="border p-3 rounded-lg"
             id="description"
+            value={formData.description}
+            onChange={handleChange}
             required
           />
 
@@ -36,6 +94,8 @@ const CreateListing = () => {
             placeholder="Address"
             className="border p-3 rounded-lg"
             id="address"
+            value={formData.address}
+            onChange={handleChange}
             required
           />
 
@@ -49,7 +109,13 @@ const CreateListing = () => {
               { id: "offer", label: "Offer" },
             ].map((item) => (
               <label key={item.id} className="flex items-center gap-2">
-                <input type="checkbox" className="w-5 h-5" id={item.id} />
+                <input
+                  type="checkbox"
+                  className="w-5 h-5"
+                  id={item.id}
+                  checked={formData[item.id]}
+                  onChange={handleChange}
+                />
                 <span>{item.label}</span>
               </label>
             ))}
@@ -57,6 +123,7 @@ const CreateListing = () => {
 
           {/* Number Inputs */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {/* Bedrooms */}
             <div className="flex flex-col">
               <label htmlFor="bedrooms" className="mb-1 font-medium">
                 Bedrooms
@@ -67,11 +134,13 @@ const CreateListing = () => {
                 min="1"
                 max="10"
                 required
-                placeholder="Bedrooms"
                 className="p-3 border rounded-lg"
+                value={formData.bedrooms}
+                onChange={handleChange}
               />
             </div>
 
+            {/* Bathrooms */}
             <div className="flex flex-col">
               <label htmlFor="bathrooms" className="mb-1 font-medium">
                 Bathrooms
@@ -82,11 +151,13 @@ const CreateListing = () => {
                 min="1"
                 max="10"
                 required
-                placeholder="Bathrooms"
                 className="p-3 border rounded-lg"
+                value={formData.bathrooms}
+                onChange={handleChange}
               />
             </div>
 
+            {/* Regular Price */}
             <div className="flex flex-col">
               <label htmlFor="regularPrice" className="mb-1 font-medium">
                 Regular Price
@@ -95,11 +166,13 @@ const CreateListing = () => {
                 type="number"
                 id="regularPrice"
                 required
-                placeholder="Regular Price"
                 className="p-3 border rounded-lg"
+                value={formData.regularPrice}
+                onChange={handleChange}
               />
             </div>
 
+            {/* Discounted Price */}
             <div className="flex flex-col">
               <label htmlFor="discountedPrice" className="mb-1 font-medium">
                 Discounted Price
@@ -108,41 +181,41 @@ const CreateListing = () => {
                 type="number"
                 id="discountedPrice"
                 required
-                placeholder="Discounted Price"
                 className="p-3 border rounded-lg"
+                value={formData.discountedPrice}
+                onChange={handleChange}
               />
             </div>
           </div>
         </div>
 
-        {/* RIGHT SECTION */}
-        <div className="flex flex-col gap-4 flex-1 p-5 border rounded-xl shadow-sm bg-white">
+        {/* ----------------------------- */}
+        {/* RIGHT SECTION (IMAGE UPLOAD)  */}
+        {/* ----------- COMMENTED -------- */}
+        {/*
+        <div className="flex flex-col gap-4 flex-1 p-5 border rounded-xl bg-white shadow-sm">
           <p className="font-semibold">
             Images:
             <span className="font-normal text-gray-600"> (max 6)</span>
           </p>
 
-          <div className="flex items-center gap-4">
-            <input
-              type="file"
-              id="images"
-              accept="image/*"
-              multiple
-              className="border p-2 rounded-lg"
-            />
-            <button
-              type="button"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-            >
-              Upload
-            </button>
-          </div>
+          <input
+            type="file"
+            id="images"
+            accept="image/*"
+            multiple
+            className="border p-2 rounded-lg"
+          />
         </div>
+        */}
+        {/* -------------------------------- */}
       </form>
 
       {/* SUBMIT BUTTON */}
       <button
         className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition text-lg font-medium"
+        type="submit"
+        onClick={handleSubmit}
       >
         Create Listing
       </button>
