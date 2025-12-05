@@ -1,3 +1,4 @@
+import Listing from "../models/listing.model.js";
 import User from "../models/User.model.js";
 import { errorHandler } from "../utilis/error.js";
 import bcrypt from 'bcryptjs';
@@ -42,6 +43,7 @@ export const deleteUser = async (req,res,next)=>{
     }
     try{
         await User.findByIdAndDelete(req.params.id);
+        await Listing.deleteMany({userRef:req.params.id});
         res.clearCookie("access_token");
         res.status(200).json({
             success:true,

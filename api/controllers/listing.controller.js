@@ -1,5 +1,7 @@
 import Listing from "../models/listing.model.js";
 import { errorHandler } from "../utilis/error.js";
+import User from "../models/User.model.js";
+
 
 export const createListing = async (req, res, next) => {
     try{
@@ -103,3 +105,28 @@ export const showall = async (req,res,next)=>{
         next(err);
     }
 }
+
+export const showListingsForUser = async (req, res, next) => {
+  try {
+    // Find the listing by ID
+    const listing = await Listing.findById(req.params.id);
+    if (!listing) {
+      return next(errorHandler(404, "Listing not found"));
+    }
+
+    // Fetch the user associated with this listing
+    const user = await User.findById(listing.userRef).select('-password'); // exclude sensitive info
+    if (!user) {
+      return next(errorHandler(404, "User not found"));
+    }
+
+    // Return both listing and user data
+    res.status(200).json({
+      ...listing.toObject(), // convert mongoose doc to plain JS object
+      user: user.toObject(),  // attach user data
+    });
+
+  } catch (err) {
+    next(err);
+  }   
+};

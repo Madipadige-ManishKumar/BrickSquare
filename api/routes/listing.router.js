@@ -1,5 +1,5 @@
 import express from 'express';
-import { createListing, deleteListing, showall, showEachListing, showListings, updateListing } from '../controllers/listing.controller.js';
+import { createListing, deleteListing, showall, showEachListing, showListings, showListingsForUser, updateListing } from '../controllers/listing.controller.js';
 import { verifyToken } from '../utilis/verifyuser.js';
 
 const router = express.Router();
@@ -15,6 +15,8 @@ router.get('/list/:id',verifyToken,showEachListing);
 router.post('/update/:id',verifyToken,updateListing);
 
 router.get('/home',showall)
+
+router.get('/show-list/:id',showListingsForUser)
 
 
 export default router;

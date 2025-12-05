@@ -3,6 +3,7 @@ import { FaBed, FaBath, FaParking, FaCouch, FaEdit, FaTrash } from "react-icons/
 import { useNavigate } from "react-router-dom";
 import EachList from "../pages/EachList";
 
+
 const Profile = ({ data }) => {
   const navigate = useNavigate();
 
@@ -38,75 +39,95 @@ const Profile = ({ data }) => {
 
 
   return (
-    <div className="min-h-screen bg-white p-6">
-      <h1 className="text-3xl font-bold text-center text-green-700 mb-8">
-        Your Listings
-      </h1>
 
-      {data.length === 0 ? (
-        <p className="text-center text-blue-500">No listings available.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data.map((listing) => (
-            <div
-              key={listing._id}
-              className="bg-gradient-to-br from-green-100 to-blue-100 text-green-800 rounded-2xl shadow-lg p-6 hover:scale-105 transition-transform duration-300 relative"
-            >
-              {/* Colored header as visual replacement for image */}
-              <div className="h-40 bg-green-200 rounded-xl flex items-center justify-center text-3xl font-bold text-white mb-4">
-                {listing.name[0].toUpperCase()}
-              </div>
+    
 
-              <p className="mb-2">{listing.description}</p>
-              <p className="text-sm mb-4">{listing.address}</p>
+<div className="min-h-screen bg-gray-50 p-6">
+  <h1 className="text-4xl sm:text-5xl font-extrabold text-center text-green-700 mb-12
+      bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500
+      bg-clip-text text-transparent animate-gradient-x"
+  >
+    Your Listings
+  </h1>
 
-              <div className="flex justify-between items-center mb-4">
-                <span className="font-bold text-green-700 text-lg">
-                  ₹{listing.regularPrice}
-                </span>
-                <div className="flex gap-4 text-green-800 text-sm">
-                  <div className="flex items-center gap-1">
-                    <FaBed /> {listing.bedrooms}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <FaBath /> {listing.bathrooms}
-                  </div>
-                </div>
-              </div>
+  {data.length === 0 ? (
+    <p className="text-center text-blue-500 text-lg">No listings available.</p>
+  ) : (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-10 justify-items-center">
+      {data.map((listing) => (
+        <div
+          key={listing._id}
+          className="
+            relative
+            w-full max-w-sm  /* responsive max width */
+            bg-white/40 backdrop-blur-xl
+            rounded-3xl shadow-2xl
+            p-6
+            overflow-hidden
+            hover:scale-105 hover:shadow-[0_15px_50px_rgba(0,0,0,0.25)]
+            transition-all duration-300
+          "
+        >
+          {/* Top Header / Image Simulation */}
+          <div className="h-48 w-full rounded-2xl bg-gradient-to-br from-green-400 to-blue-400 flex items-center justify-center text-5xl font-extrabold text-white mb-5 shadow-inner">
+            {listing.name[0].toUpperCase()}
+          </div>
 
-              <div className="flex gap-2 flex-wrap mb-4">
-                {listing.furnished && (
-                  <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-xs flex items-center gap-1">
-                    <FaCouch /> Furnished
-                  </span>
-                )}
-                {listing.parking && (
-                  <span className="bg-green-600 text-white px-3 py-1 rounded-full text-xs flex items-center gap-1">
-                    <FaParking /> Parking
-                  </span>
-                )}
-              </div>
+          {/* Description */}
+          <p className="text-gray-700 font-medium mb-2 line-clamp-3">{listing.description}</p>
+          <p className="text-gray-500 text-sm mb-4">{listing.address}</p>
 
-              {/* Edit Button */}
-              <button
-                onClick={() => handleEdit(listing._id)}
-                className="absolute top-4 right-4 bg-green-700 hover:bg-green-600 text-white px-3 py-1 rounded-full flex items-center gap-1 text-sm"
-              >
-                <FaEdit /> Edit
-              </button>
-
-              {/* Delete Button */}
-              <button
-                onClick={() => handleDelete(listing._id)}
-                className="absolute top-4 right-20 bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-full flex items-center gap-1 text-sm"
-              >
-                <FaTrash /> Delete
-              </button>
+          {/* Price and Features */}
+          <div className="flex justify-between items-center mb-4">
+            <span className="font-bold text-lg text-green-800">
+              ₹{listing.regularPrice}
+            </span>
+            <div className="flex gap-4 text-gray-700 text-sm">
+              <div className="flex items-center gap-1"><FaBed /> {listing.bedrooms}</div>
+              <div className="flex items-center gap-1"><FaBath /> {listing.bathrooms}</div>
             </div>
-          ))}
+          </div>
+
+          {/* Badges */}
+          <div className="flex gap-2 flex-wrap mb-4">
+            {listing.furnished && (
+              <span className="bg-blue-500/80 text-white px-3 py-1 rounded-full text-xs flex items-center gap-1 shadow-sm">
+                <FaCouch /> Furnished
+              </span>
+            )}
+            {listing.parking && (
+              <span className="bg-green-600/80 text-white px-3 py-1 rounded-full text-xs flex items-center gap-1 shadow-sm">
+                <FaParking /> Parking
+              </span>
+            )}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="absolute top-4 right-4 flex gap-2">
+            <button
+              onClick={() => handleEdit(listing._id)}
+              className="bg-green-700 hover:bg-green-600 text-white px-3 py-1 rounded-full flex items-center gap-1 text-sm shadow-md transition-all"
+            >
+              <FaEdit /> Edit
+            </button>
+            <button
+              onClick={() => handleDelete(listing._id)}
+              className="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-full flex items-center gap-1 text-sm shadow-md transition-all"
+            >
+              <FaTrash /> Delete
+            </button>
+          </div>
         </div>
-      )}
+      ))}
     </div>
+  )}
+</div>
+
+
+
+
+
+
   );
 };
 

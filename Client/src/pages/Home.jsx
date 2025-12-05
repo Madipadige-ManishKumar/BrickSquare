@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import EachCard from "../components/EachCard";
+
 
 const Home = () => {
   const [listings, setListings] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
-    type: "",       // rent or sale
+    type: "", // rent or sale
     furnished: false,
     parking: false,
     bedrooms: 1,
@@ -37,14 +39,14 @@ const Home = () => {
     }));
   };
 
-  // Filter listings based on search term and filters
+  // Filter listings based on search & filter options
   const filteredListings = listings.filter((listing) => {
     return (
       listing.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (filters.type ? listing.type === filters.type : true) &&
-      (filters.furnished ? listing.furnished === filters.furnished : true) &&
-      (filters.parking ? listing.parking === filters.parking : true) &&
-      (filters.offer ? listing.offer === filters.offer : true) &&
+      (filters.furnished ? listing.furnished === true : true) &&
+      (filters.parking ? listing.parking === true : true) &&
+      (filters.offer ? listing.offer === true : true) &&
       listing.bedrooms >= filters.bedrooms &&
       listing.bathrooms >= filters.bathrooms
     );
@@ -53,7 +55,8 @@ const Home = () => {
   return (
     <div className="flex max-w-6xl mx-auto p-4 gap-6">
       {/* Left Section - Search + Filters */}
-      <div className="w-1/3 p-4 border rounded-lg space-y-4 shadow-sm">
+      
+      <div className="w-1/3 p-4 border rounded-lg space-y-4 shadow-sm h-fit sticky top-4">
         <h2 className="text-xl font-semibold mb-2">Search & Filters</h2>
 
         {/* Search */}
@@ -117,6 +120,7 @@ const Home = () => {
             />
             Furnished
           </label>
+
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
@@ -126,6 +130,7 @@ const Home = () => {
             />
             Parking
           </label>
+
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
@@ -142,29 +147,7 @@ const Home = () => {
       <div className="w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
         {filteredListings.length > 0 ? (
           filteredListings.map((listing) => (
-            <div
-              key={listing._id}
-              className="border p-4 rounded-lg shadow hover:shadow-lg transition"
-            >
-              <h3 className="font-semibold text-lg">{listing.name}</h3>
-              <p className="text-gray-600">{listing.description}</p>
-              <p className="mt-2">
-                <span className="font-medium">Address:</span> {listing.address}
-              </p>
-              <p>
-                <span className="font-medium">Price:</span> {listing.regularPrice}
-              </p>
-              <p>
-                <span className="font-medium">Bedrooms:</span> {listing.bedrooms} |{" "}
-                <span className="font-medium">Bathrooms:</span> {listing.bathrooms}
-              </p>
-              <p>
-                <span className="font-medium">Furnished:</span>{" "}
-                {listing.furnished ? "Yes" : "No"} |{" "}
-                <span className="font-medium">Parking:</span>{" "}
-                {listing.parking ? "Yes" : "No"}
-              </p>
-            </div>
+            <EachCard key={listing._id} listing={listing} />
           ))
         ) : (
           <p>No listings found.</p>
