@@ -24,8 +24,19 @@ const EachCard = ({ listing }) => {
         {/* Info */}
         <div className="card-info">
           <p className="text-title">{listing.name}</p>
+          <p
+          className={`inline-block px-3 py-1 rounded-full text-sm font-semibold shadow-md 
+          ${listing?.bestseller 
+          ? "bg-green-500 text-white" 
+          : ""
+        }`}
+          >
+  {listing?.bestseller ? "Best Seller" : ""}
+</p>
+
           <p className="text-body">{listing.description?.slice(0, 60)}...</p>
           <p className="text-subtitle">{listing.address}</p>
+          
         </div>
 
         {/* Footer */}

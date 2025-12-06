@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FaBed, FaBath, FaParking, FaCouch, FaTag, FaArrowLeft } from "react-icons/fa";
+import {
+  FaBed,
+  FaBath,
+  FaParking,
+  FaCouch,
+  FaTag,
+  FaArrowLeft,
+  FaRoad,
+  FaHome,
+  FaFire,
+  FaSnowflake,
+  FaLayerGroup,
+  FaRulerCombined,
+} from "react-icons/fa";
 
 const EachListing = () => {
   const { id } = useParams();
@@ -22,8 +35,10 @@ const EachListing = () => {
 
   if (!data || Object.keys(data).length === 0) {
     return (
-      <h1 className="text-center mt-10 text-xl text-gray-500">Loading listing...</h1>
-    );
+      <h1 className="text-center mt-10 text-xl text-gray-500">
+        Loading listing...
+      </h1>
+    ); 
   }
 
   return (
@@ -39,43 +54,125 @@ const EachListing = () => {
         >
           <FaArrowLeft /> Back
         </button>
-
+        <br />
+        <br />        
         {/* Listing Info */}
-        <h1 className="text-3xl font-extrabold mb-4 text-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-extrabold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           {data.name}
         </h1>
+        <p
+          className={`inline-block px-3 py-1 rounded-full text-sm font-semibold shadow-md 
+          ${data?.bestseller 
+              ? "bg-green-500 text-white" 
+              : ""
+          }`}
+        >
+          {data?.bestseller ? "Best Seller" : ""}
+        </p>
+
         <p className="text-gray-800 mb-2">{data.description}</p>
         <p className="text-gray-600 mb-4">Address: {data.address}</p>
 
-        {/* Features */}
+        {/* BASIC FEATURES */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
           <div className="flex items-center gap-2 bg-green-100 text-green-700 rounded-xl p-2 justify-center">
             <FaBed /> {data.bedrooms} Beds
           </div>
+
           <div className="flex items-center gap-2 bg-blue-100 text-blue-700 rounded-xl p-2 justify-center">
             <FaBath /> {data.bathrooms} Baths
           </div>
+
           <div
             className={`flex items-center gap-2 rounded-xl p-2 justify-center ${
-              data.furnished ? "bg-purple-100 text-purple-700" : "bg-gray-200 text-gray-500"
+              data.furnished
+                ? "bg-purple-100 text-purple-700"
+                : "bg-gray-200 text-gray-500"
             }`}
           >
             <FaCouch /> {data.furnished ? "Furnished" : "Unfurnished"}
           </div>
+
           <div
             className={`flex items-center gap-2 rounded-xl p-2 justify-center ${
-              data.parking ? "bg-yellow-100 text-yellow-700" : "bg-gray-200 text-gray-500"
+              data.parking
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-gray-200 text-gray-500"
             }`}
           >
             <FaParking /> {data.parking ? "Parking" : "No Parking"}
           </div>
         </div>
 
+        {/* EXTRA FEATURES */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+
+          <div className="flex items-center gap-2 bg-orange-100 text-orange-700 rounded-xl p-2 justify-center">
+            <FaRulerCombined /> Area: {data.area} sqft
+          </div>
+
+          <div className="flex items-center gap-2 bg-indigo-100 text-indigo-700 rounded-xl p-2 justify-center">
+            <FaLayerGroup /> Stories: {data.stories}
+          </div>
+
+          <div
+            className={`flex items-center gap-2 rounded-xl p-2 justify-center ${
+              data.mainRoad
+                ? "bg-green-100 text-green-700"
+                : "bg-gray-200 text-gray-500"
+            }`}
+          >
+            <FaRoad /> {data.mainRoad ? "Main Road" : "Not Main Road"}
+          </div>
+
+          <div
+            className={`flex items-center gap-2 rounded-xl p-2 justify-center ${
+              data.guestRoom
+                ? "bg-blue-100 text-blue-700"
+                : "bg-gray-200 text-gray-500"
+            }`}
+          >
+            <FaHome /> {data.guestRoom ? "Guest Room" : "No Guest Room"}
+          </div>
+
+          <div
+            className={`flex items-center gap-2 rounded-xl p-2 justify-center ${
+              data.basement
+                ? "bg-purple-100 text-purple-700"
+                : "bg-gray-200 text-gray-500"
+            }`}
+          >
+            <FaHome /> {data.basement ? "Basement" : "No Basement"}
+          </div>
+
+          <div
+            className={`flex items-center gap-2 rounded-xl p-2 justify-center ${
+              data.hotWaterHeating
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-gray-200 text-gray-500"
+            }`}
+          >
+            <FaFire /> {data.hotWaterHeating ? "Heating" : "No Heating"}
+          </div>
+
+          <div
+            className={`flex items-center gap-2 rounded-xl p-2 justify-center ${
+              data.airConditioning
+                ? "bg-blue-100 text-blue-700"
+                : "bg-gray-200 text-gray-500"
+            }`}
+          >
+            <FaSnowflake /> {data.airConditioning ? "AC" : "No AC"}
+          </div>
+
+        </div>
+
         {/* Type & Offer */}
         <div className="flex gap-4 mb-6">
           <span className="flex items-center gap-2 bg-gradient-to-r from-green-400 to-blue-500 text-white px-4 py-2 rounded-full font-semibold">
-            <FaTag /> {data.type.toUpperCase()}
+            <FaTag /> {data.type?.toUpperCase()}
           </span>
+
           {data.offer && (
             <span className="flex items-center gap-2 bg-gradient-to-r from-pink-400 to-purple-500 text-white px-4 py-2 rounded-full font-semibold">
               OFFER
@@ -86,16 +183,20 @@ const EachListing = () => {
         {/* Pricing */}
         <div className="flex items-center justify-between text-2xl font-bold text-emerald-700 mb-6">
           <span>₹{data.regularPrice}</span>
-          {data.discountedPrice && data.discountedPrice !== data.regularPrice && (
-            <span className="text-lg text-red-500 line-through">
-              ₹{data.discountedPrice}
-            </span>
-          )}
+
+          {data.discountedPrice &&
+            data.discountedPrice !== data.regularPrice && (
+              <span className="text-lg text-red-500 line-through">
+                ₹{data.discountedPrice}
+              </span>
+            )}
         </div>
 
         {/* User Info */}
         <div className="bg-gray-100 p-4 rounded-xl shadow-inner">
-          <h2 className="text-xl font-semibold text-gray-700 mb-2">User Info</h2>
+          <h2 className="text-xl font-semibold text-gray-700 mb-2">
+            User Info
+          </h2>
           <p className="text-gray-800">Name: {data.user?.username}</p>
           <p className="text-gray-600">Email: {data.user?.email}</p>
         </div>

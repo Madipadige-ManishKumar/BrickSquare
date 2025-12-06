@@ -1,14 +1,60 @@
 import Listing from "../models/listing.model.js";
 import { errorHandler } from "../utilis/error.js";
 import User from "../models/User.model.js";
+import fetch from "node-fetch";
 
 
 export const createListing = async (req, res, next) => {
     try{
-        console.log("Creating listing with data:");
-        console.log(req.body);
-        const listing  = await Listing.create(req.body);
-        res.status(201).json(listing);
+        console.log("Received listing data:", req.body);
+        const predictionData = {
+            area: Number(req.body.area),
+            bedrooms: Number(req.body.bedrooms),
+            bathrooms: Number(req.body.bathrooms),
+            stories: Number(req.body.stories),
+            parking: req.body.parking ? 1 : 0,
+            mainroad: req.body.mainRoad ? "yes" : "no",
+            guestroom: req.body.guestRoom ? "yes" : "no",
+            basement: req.body.basement ? "yes" : "no",
+            hotwaterheating: req.body.hotWaterHeating ? "yes" : "no",
+            airconditioning: req.body.airConditioning ? "yes" : "no",
+            furnishingstatus: req.body.furnished ? "furnished" : "unfurnished"
+        };
+        
+        const response = await fetch(process.env.ML_PORT+"/predict", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(predictionData)
+        })
+        if (!response.ok) {
+            const errorData = await response.json();
+            return res.status(response.status).json({ error: errorData.error || "Prediction failed" });
+        }
+
+        const predictionResult = await response.json();
+        console.log("Prediction result from Flask:", predictionResult);
+        let bestseller = false;
+        console.log(predictionResult.predictedPrice+"this is predict  and regular price"+req.body.regularPrice)
+        if(parseInt(predictionResult.predictedPrice)>parseInt(req.body.regularPrice))
+            {
+                console.log("in if");
+                bestseller = true;
+            }
+            else
+            {
+                console.log("in else");
+                bestseller = false;
+            }
+
+    // Add bestseller & predictedPrice to req.body before saving to DB
+        const listingData = {
+            ...req.body,
+            bestseller: bestseller,
+        };
+        const listing  = await Listing.create(listingData);
+        res.status(201).json(listingData);
     }
     catch(err){
         next(err);
@@ -63,7 +109,7 @@ export const showEachListing = async (req,res,next)=>{
         return next(errorHandler(403,"You are not authorized to view this listing"));
     }
     
-        res.status(200).json(listing);
+    res.status(200).json(listing);
 }
     catch(err){
         next(err);

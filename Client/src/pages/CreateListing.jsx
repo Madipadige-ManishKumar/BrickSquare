@@ -5,8 +5,9 @@ import { useNavigate } from "react-router-dom";
 const CreateListing = () => {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  console.log("Current User in CreateListing:", currentUser._id);
+
   const [formData, setFormData] = useState({
+    // OLD FIELDS
     name: "",
     description: "",
     address: "",
@@ -21,6 +22,15 @@ const CreateListing = () => {
     regularPrice: 0,
     discountedPrice: 0,
     userRef: currentUser ? currentUser._id : "",
+
+    // NEW FIELDS
+    area: 0,
+    stories: 1,
+    mainRoad: false,
+    guestRoom: false,
+    basement: false,
+    hotWaterHeating: false,
+    airConditioning: false,
   });
 
   // General input handler
@@ -33,33 +43,39 @@ const CreateListing = () => {
     }));
   };
 
-  // Submit handler
+  // Submit handler (sale/rent -> type)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const {sale,rent,...rest} = formData;
-    if(rent)
-    {
-        rest.type = "rent";
+
+    let finalType = "none";
+
+    if (formData.sale && formData.rent) {
+      finalType = "rent and sale";
+    } else if (formData.sale) {
+      finalType = "sale";
+    } else if (formData.rent) {
+      finalType = "rent";
     }
-    else if(sale)
-    {
-        rest.type = "sale";
-    }
-    else if(sale && rent)
-    {
-        rest.type ="rent and sale"
-    }
-    const res = await fetch('/api/listings/create',{
-        method:"POST",
-        headers:{
-            'Content-Type':'application/json',
-        },
-        credentials: "include",
-        body:JSON.stringify(rest),
+
+    // remove sale & rent before sending to backend
+    const { sale, rent, ...rest } = formData;
+
+    const finalData = {
+      ...rest,
+      type: finalType,
+    };
+    console.log(finalData);
+    const res = await fetch("/api/listings/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(finalData),
     });
+
     const data = await res.json();
-    navigate('/profile');
-    
+    navigate("/profile");
   };
 
   return (
@@ -69,7 +85,7 @@ const CreateListing = () => {
       </h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-10 mb-10">
-        {/* LEFT SECTION ONLY */}
+        {/* LEFT SECTION */}
         <div className="flex flex-col gap-6">
           {/* Name */}
           <input
@@ -105,7 +121,7 @@ const CreateListing = () => {
             required
           />
 
-          {/* Checkboxes */}
+          {/* Checkboxes (sale/rent + others) */}
           <div className="flex flex-wrap gap-4 mt-2">
             {[
               { id: "sale", label: "Sell" },
@@ -113,6 +129,13 @@ const CreateListing = () => {
               { id: "parking", label: "Parking Spot" },
               { id: "furnished", label: "Furnished" },
               { id: "offer", label: "Offer" },
+
+              // NEW
+              { id: "mainRoad", label: "Main Road" },
+              { id: "guestRoom", label: "Guest Room" },
+              { id: "basement", label: "Basement" },
+              { id: "hotWaterHeating", label: "Hot Water Heating" },
+              { id: "airConditioning", label: "Air Conditioning" },
             ].map((item) => (
               <label key={item.id} className="flex items-center gap-2">
                 <input
@@ -178,7 +201,7 @@ const CreateListing = () => {
               />
             </div>
 
-            {/* Discounted Price */}
+            {/* Discounted Price (acts as price) */}
             <div className="flex flex-col">
               <label htmlFor="discountedPrice" className="mb-1 font-medium">
                 Discounted Price
@@ -192,29 +215,40 @@ const CreateListing = () => {
                 onChange={handleChange}
               />
             </div>
+
+            {/* Area */}
+            <div className="flex flex-col">
+              <label htmlFor="area" className="mb-1 font-medium">
+                Area (sq ft)
+              </label>
+              <input
+                type="number"
+                id="area"
+                required
+                className="p-3 border rounded-lg"
+                value={formData.area}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* Stories */}
+            <div className="flex flex-col">
+              <label htmlFor="stories" className="mb-1 font-medium">
+                Stories
+              </label>
+              <input
+                type="number"
+                id="stories"
+                min="1"
+                max="100"
+                required
+                className="p-3 border rounded-lg"
+                value={formData.stories}
+                onChange={handleChange}
+              />
+            </div>
           </div>
         </div>
-
-        {/* ----------------------------- */}
-        {/* RIGHT SECTION (IMAGE UPLOAD)  */}
-        {/* ----------- COMMENTED -------- */}
-        {/*
-        <div className="flex flex-col gap-4 flex-1 p-5 border rounded-xl bg-white shadow-sm">
-          <p className="font-semibold">
-            Images:
-            <span className="font-normal text-gray-600"> (max 6)</span>
-          </p>
-
-          <input
-            type="file"
-            id="images"
-            accept="image/*"
-            multiple
-            className="border p-2 rounded-lg"
-          />
-        </div>
-        */}
-        {/* -------------------------------- */}
       </form>
 
       {/* SUBMIT BUTTON */}

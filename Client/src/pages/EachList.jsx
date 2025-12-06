@@ -4,9 +4,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 const EachList = () => {
   const { id } = useParams();
-  const { currentUser } = useSelector((state) => state.user)
+  const { currentUser } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({});
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -17,7 +17,7 @@ const EachList = () => {
         });
 
         const data = await res.json();
-        setFormData(data);   // <-- Fill form with fetched data
+        setFormData(data);
       } catch (err) {
         console.log(err);
       }
@@ -38,22 +38,23 @@ const EachList = () => {
     e.preventDefault();
 
     const { sale, rent, ...rest } = formData;
-    // Determine type based on sale/rent
+
     if (sale && rent) rest.type = "sale and rent";
     else if (sale) rest.type = "sale";
     else if (rent) rest.type = "rent";
     else rest.type = "";
 
     const res = await fetch(`/api/listings/update/${id}`, {
-        method:"POST",
-        headers:{
-            'Content-Type':'application/json',
-        },
-        credentials: "include",
-        body: JSON.stringify(rest),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(rest),
     });
+
     const data = await res.json();
-    navigate('/profile');
+    navigate("/profile");
   };
 
   return (
@@ -64,7 +65,7 @@ const EachList = () => {
         Update Listing
       </h1>
 
-      <div className="bg-white/70 backdrop-blur-2xl shadow-2xl rounded-2xl p-8 border border-white/20 transition-all hover:shadow-[0px_0px_40px_rgba(0,0,0,0.15)]">
+      <div className="bg-white/70 backdrop-blur-2xl shadow-2xl rounded-2xl p-8 border border-white/20">
         <form onSubmit={handleSubmit} className="flex flex-col gap-8">
 
           {/* Basic Inputs */}
@@ -73,7 +74,7 @@ const EachList = () => {
             <input
               type="text"
               placeholder="Listing Name"
-              className="p-3 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              className="p-3 rounded-xl border"
               id="name"
               value={formData.name || ""}
               onChange={handleChange}
@@ -82,7 +83,7 @@ const EachList = () => {
 
             <textarea
               placeholder="Description"
-              className="p-3 rounded-xl border border-gray-300 shadow-sm h-40 resize-none focus:ring-2 focus:ring-purple-500 outline-none transition-all"
+              className="p-3 rounded-xl border h-40 resize-none"
               id="description"
               value={formData.description || ""}
               onChange={handleChange}
@@ -92,7 +93,7 @@ const EachList = () => {
             <input
               type="text"
               placeholder="Address"
-              className="p-3 rounded-xl border border-gray-300 shadow-sm focus:ring-2 focus:ring-emerald-600 outline-none transition-all"
+              className="p-3 rounded-xl border"
               id="address"
               value={formData.address || ""}
               onChange={handleChange}
@@ -107,6 +108,11 @@ const EachList = () => {
                 { id: "parking", label: "Parking Spot" },
                 { id: "furnished", label: "Furnished" },
                 { id: "offer", label: "Offer" },
+                { id: "mainRoad", label: "Main Road Facing" },
+                { id: "guestRoom", label: "Guest Room" },
+                { id: "basement", label: "Basement" },
+                { id: "hotWaterHeating", label: "Hot Water Heating" },
+                { id: "airConditioning", label: "Air Conditioning" },
               ].map((item) => (
                 <label key={item.id} className="flex items-center gap-2">
                   <input
@@ -129,7 +135,7 @@ const EachList = () => {
                 <input
                   type="number"
                   id="bedrooms"
-                  className="p-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                  className="p-3 border rounded-xl"
                   value={formData.bedrooms || 1}
                   onChange={handleChange}
                   required
@@ -141,7 +147,7 @@ const EachList = () => {
                 <input
                   type="number"
                   id="bathrooms"
-                  className="p-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-pink-500 outline-none transition-all"
+                  className="p-3 border rounded-xl"
                   value={formData.bathrooms || 1}
                   onChange={handleChange}
                   required
@@ -153,7 +159,7 @@ const EachList = () => {
                 <input
                   type="number"
                   id="regularPrice"
-                  className="p-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 outline-none transition-all"
+                  className="p-3 border rounded-xl"
                   value={formData.regularPrice || 0}
                   onChange={handleChange}
                   required
@@ -161,23 +167,48 @@ const EachList = () => {
               </div>
 
               <div className="flex flex-col">
-                <label className="mb-2 font-semibold text-gray-700">Discounted Price</label>
+                <label className="mb-2 font-semibold text-gray-700">Discounted Price (Main Price)</label>
                 <input
                   type="number"
                   id="discountedPrice"
-                  className="p-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-yellow-500 outline-none transition-all"
+                  className="p-3 border rounded-xl"
                   value={formData.discountedPrice || 0}
                   onChange={handleChange}
                   required
                 />
               </div>
-            </div>
 
+              {/* NEW FIELDS */}
+              <div className="flex flex-col">
+                <label className="mb-2 font-semibold text-gray-700">Area (sq ft)</label>
+                <input
+                  type="number"
+                  id="area"
+                  className="p-3 border rounded-xl"
+                  value={formData.area || 0}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="mb-2 font-semibold text-gray-700">Stories</label>
+                <input
+                  type="number"
+                  id="stories"
+                  className="p-3 border rounded-xl"
+                  value={formData.stories || 1}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+            </div>
           </div>
 
           {/* Submit Button */}
           <button
-            className="w-full py-4 rounded-xl text-white text-lg font-semibold bg-gradient-to-r from-green-500 to-emerald-600 hover:opacity-90 transition-all shadow-xl"
+            className="w-full py-4 rounded-xl text-white text-lg font-semibold bg-gradient-to-r from-green-500 to-emerald-600 hover:opacity-90"
             type="submit"
           >
             Update Listing
