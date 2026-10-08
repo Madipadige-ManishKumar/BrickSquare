@@ -62,7 +62,9 @@ describe('user.controller', () => {
     await updateUser(req, res, vi.fn());
     expect(User.findByIdAndUpdate).toHaveBeenCalledWith(
       'me',
-      expect.objectContaining({ password: 'hashed:pw' }),
+      expect.objectContaining({
+        $set: expect.objectContaining({ password: 'hashed:pw' }),
+      }),
       { new: true }
     );
     expect(res.status).toHaveBeenCalledWith(200);

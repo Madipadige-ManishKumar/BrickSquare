@@ -107,7 +107,7 @@ describe('auth.controller', () => {
     const req = { body: { name: 'G', email: 'g@e.com', photoURL: 'pic' } };
     const res = jsonRes();
     await google(req, res, vi.fn());
-    expect(jwt.sign).toHaveBeenCalledWith({ id: 'u1' });
+    expect(jwt.sign).toHaveBeenCalledWith({ id: 'u1' }, 'test-secret');
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ _id: 'u1', email: 'g@e.com' });
   });
