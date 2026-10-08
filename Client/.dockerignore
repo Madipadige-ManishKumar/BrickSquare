@@ -1,0 +1,30 @@
+# Node modules (installed fresh during build)
+node_modules
+
+# Git / editor
+.git
+.gitignore
+.vscode
+.idea
+*.swp
+.DS_Store
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+firebase.js
+firebase.example.js
+
+# Build artifacts
+dist
+dist-ssr
+
+# Tests
+src/**/*.test.js
+src/**/*.test.jsx
+
+
+# Docs
+README.md
+eslint.config.js

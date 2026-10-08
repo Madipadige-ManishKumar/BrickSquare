@@ -1,0 +1,82 @@
+version: "3.9"
+
+# Real Estate MERN project
+# Services:
+#   - api     : Node.js/Express backend (port 5000) + MongoDB
+#   - ml      : Flask ML prediction service (port 3000)
+#   - client  : React/Vite frontend served via Nginx (port 80)
+#   - mongo   : MongoDB database
+#
+# Run with:  docker compose up --build
+
+services:
+  # ------------------------------------------------------------------
+  # Backend API (Node.js / Express / Mongoose)
+  # ------------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_DB_URL=mongodb://mongo:27017/real-estate
+      - JWT_SECRET=${JWT_SECRET:-change-me-in-production}
+    depends_on:
+      - mongo
+    networks:
+      - app
+
+  # ------------------------------------------------------------------
+  # Machine Learning prediction service (Flask / scikit-learn)
+  # ------------------------------------------------------------------
+  ml:
+    build:
+      context: ./ML-api
+      dockerfile: Dockerfile
+    container_name: ml
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - app
+
+  # ------------------------------------------------------------------
+  # Frontend (React / Vite built to static files, served by Nginx)
+  # ------------------------------------------------------------------
+  client:
+    build:
+      context: ./Client
+      dockerfile: Dockerfile
+    container_name: client
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+      - ml
+    networks:
+      - app
+
+  # ------------------------------------------------------------------
+  # MongoDB database
+  # ------------------------------------------------------------------
+  mongo:
+    image: mongo:7
+    container_name: mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app
+
+volumes:
+  mongo-data:
+
+networks:
+  app:
+    driver: bridge

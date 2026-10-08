@@ -1,0 +1,61 @@
+# Node modules (installed fresh in the image)
+node_modules
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python virtualenvs (ML service has its own Dockerfile)
+venv
+env
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Editor / IDE
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+
+# Environment files (secrets must NOT be baked into the image)
+.env
+.env.*
+!.env.example
+
+# Local config files
+firebase.js
+firebase.example.js
+
+# Docker artifacts (avoid nesting)
+Dockerfile
+docker-compose.yml
+.dockerignore
+Client/Dockerfile
+Client/nginx.conf
+Client/.dockerignore
+ML-api/Dockerfile
+ML-api/.dockerignore
+ML-api/requirements.txt
+
+# Distribution / build output
+dist
+dist-ssr
+
+# Test files (not needed in production image)
+api/test
+Client/src/**/*.test.js
+Client/src/**/*.test.jsx
+
+# Lock files (re-generated during build)
+
+
+# Documentation
+README.md

@@ -1,0 +1,25 @@
+# Local virtual environment (installed fresh in the image)
+venv
+env
+.venv
+
+# Python bytecode / caches
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Git / editor
+.git
+.gitignore
+.vscode
+.idea
+*.swp
+.DS_Store
+
+# Docker artifacts
+Dockerfile
+.dockerignore
+
+# Docs
+README.md
