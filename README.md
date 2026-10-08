@@ -218,6 +218,4 @@ Send a `POST` request to `http://localhost:3000/predict` with JSON property feat
 
 ---
 
-## 📄 License
 
-This project is open source and available under the [ISC License](LICENSE).
