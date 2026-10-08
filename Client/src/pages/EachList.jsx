@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 const EachList = () => {
   const { id } = useParams();
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser: _currentUser } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
 
@@ -53,7 +53,7 @@ const EachList = () => {
       body: JSON.stringify(rest),
     });
 
-    const data = await res.json();
+    await res.json();
     navigate("/profile");
   };
 

@@ -21,7 +21,7 @@ const Profile = () => {
       }
     };
     fetchListings();
-  },[])
+  },[currentUser?._id])
   const handleChange = (e) =>{
     setFormData(
       {

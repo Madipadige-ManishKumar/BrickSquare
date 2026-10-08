@@ -58,7 +58,7 @@ const CreateListing = () => {
     }
 
     // remove sale & rent before sending to backend
-    const { sale, rent, ...rest } = formData;
+    const { sale: _sale, rent: _rent, ...rest } = formData;
 
     const finalData = {
       ...rest,
@@ -74,7 +74,7 @@ const CreateListing = () => {
       body: JSON.stringify(finalData),
     });
 
-    const data = await res.json();
+    await res.json();
     navigate("/profile");
   };
 
