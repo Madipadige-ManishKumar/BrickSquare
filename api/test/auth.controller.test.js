@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { signup, signin, google, signout } from '../../controllers/auth.controller.js';
+import { signup, signin, google, signout } from '../controllers/auth.controller.js';
 
 // Mock dependencies so tests run without MongoDB / real crypto.
 vi.mock('bcryptjs', () => ({
@@ -17,7 +17,7 @@ vi.mock('jsonwebtoken', () => ({
   verify: vi.fn(),
 }));
 
-vi.mock('../../models/User.model.js', () => {
+vi.mock('../models/User.model.js', () => {
   const save = vi.fn().mockResolvedValue({ _id: 'u1', username: 'test', email: 't@e.com' });
   const User = function (data = {}) {
     return { ...data, _doc: { ...data }, save };
@@ -30,7 +30,7 @@ vi.mock('../../models/User.model.js', () => {
 
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../../models/User.model.js';
+import User from '../models/User.model.js';
 
 const jsonRes = () => ({
   status: vi.fn().mockReturnThis(),

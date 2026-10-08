@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { test, updateUser, deleteUser } from '../../controllers/user.controller.js';
+import { test, updateUser, deleteUser } from '../controllers/user.controller.js';
 
 vi.mock('bcryptjs', () => ({
   default: { hashSync: vi.fn((pw) => `hashed:${pw}`) },
   hashSync: vi.fn((pw) => `hashed:${pw}`),
 }));
 
-vi.mock('../../models/User.model.js', () => {
+vi.mock('../models/User.model.js', () => {
   const findByIdAndUpdate = vi.fn();
   const findByIdAndDelete = vi.fn();
   const deleteMany = vi.fn().mockResolvedValue({});
@@ -17,15 +17,15 @@ vi.mock('../../models/User.model.js', () => {
   return { default: User };
 });
 
-vi.mock('../../models/listing.model.js', () => {
+vi.mock('../models/listing.model.js', () => {
   const deleteMany = vi.fn().mockResolvedValue({});
   const Listing = function () {};
   Listing.deleteMany = deleteMany;
   return { default: Listing };
 });
 
-import User from '../../models/User.model.js';
-import Listing from '../../models/listing.model.js';
+import User from '../models/User.model.js';
+import Listing from '../models/listing.model.js';
 
 const jsonRes = () => ({
   status: vi.fn().mockReturnThis(),
